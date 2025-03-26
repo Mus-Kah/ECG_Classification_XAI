@@ -3,6 +3,8 @@ import seaborn as sns
 import numpy as np
 from sklearn.metrics import confusion_matrix
 from scipy.interpolate import interp1d
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import label_binarize
 
 def plot_reconstruction_comparison(X_test_original, reconstructed_data, mae_per_sample, save_path=None):
     num_examples_to_plot = 4
@@ -64,6 +66,85 @@ def plot_confusion_matrix(Y_test, predictions, save_path=None):
     if save_path:
         plt.savefig(save_path)
     #plt.show()
+"""
+def plot_roc_curve(Y_test, class_probabilities, save_path=None):
+    num_classes = class_probabilities.shape[1]
+
+    # Multi-class classification
+    if num_classes > 2:
+        # One-hot encode Y_test if not already one-hot
+        if len(Y_test.shape) == 1:
+            Y_test = label_binarize(Y_test, classes=range(num_classes))
+
+        plt.figure(figsize=(8, 6))
+        for i in range(num_classes):
+            fpr, tpr, _ = roc_curve(Y_test[:, i], class_probabilities[:, i])
+            roc_auc = auc(fpr, tpr)
+            plt.plot(fpr, tpr, label=f'Class {i} (AUC = {roc_auc:.2f})')
+
+    # Binary classification
+    else:
+        fpr, tpr, _ = roc_curve(Y_test, class_probabilities[:, 1])
+        roc_auc = auc(fpr, tpr)
+        plt.figure(figsize=(8, 6))
+        plt.plot(fpr, tpr, color='blue', label=f'ROC Curve (AUC = {roc_auc:.2f})')
+
+    plt.plot([0, 1], [0, 1], color='gray', linestyle='--')  # Diagonal line
+    plt.title('Receiver Operating Characteristic (ROC) Curve', fontsize=16)
+    plt.xlabel('False Positive Rate', fontsize=14)
+    plt.ylabel('True Positive Rate', fontsize=14)
+    plt.legend(loc='lower right', fontsize=12)
+    plt.grid(alpha=0.3)
+
+    if save_path:
+        plt.savefig(save_path)
+    plt.show()
+    """
+
+
+def plot_roc_curve(Y_test, class_probabilities, save_path=None, show_plot=True):
+
+    Y_test = np.array(Y_test)
+    class_probabilities = np.array(class_probabilities)
+
+    num_classes = class_probabilities.shape[1]
+
+    # Multi-class classification
+    if num_classes > 2:
+        # One-hot encode Y_test if not already one-hot
+        if len(Y_test.shape) == 1:
+            Y_test = label_binarize(Y_test, classes=range(num_classes))
+
+        plt.figure(figsize=(8, 6))
+        colors = plt.cm.get_cmap('tab10', num_classes)  # Use a colormap for distinct colors
+        for i in range(num_classes):
+            fpr, tpr, _ = roc_curve(Y_test[:, i], class_probabilities[:, i])
+            roc_auc = auc(fpr, tpr)
+            plt.plot(fpr, tpr, label=f'Class {i} (AUC = {roc_auc:.2f})', color=colors(i))
+
+    # Binary classification
+    else:
+        fpr, tpr, _ = roc_curve(Y_test, class_probabilities[:, 1])
+        roc_auc = auc(fpr, tpr)
+        plt.figure(figsize=(8, 6))
+        plt.plot(fpr, tpr, color='blue', label=f'ROC Curve (AUC = {roc_auc:.2f})')
+
+    # Plot diagonal reference line
+    plt.plot([0, 1], [0, 1], color='gray', linestyle='--', label='Random Guess')
+
+    # Plot settings
+    plt.title('Receiver Operating Characteristic (ROC) Curve', fontsize=16)
+    plt.xlabel('False Positive Rate', fontsize=14)
+    plt.ylabel('True Positive Rate', fontsize=14)
+    plt.legend(loc='lower right', fontsize=12)
+    plt.grid(alpha=0.3)
+
+    # Save or show the plot
+    if save_path:
+        plt.savefig(save_path, bbox_inches='tight')
+    if show_plot:
+        plt.show()
+    plt.close()
 
 
 def plot_attention_heads(attention_weights, save_path=None):

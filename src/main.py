@@ -2,7 +2,7 @@ from data_preprocessing import load_ptbdb_data, split_and_scale_ptbdb_data, load
 from autoencoder import create_autoencoder_model, get_encoder
 from data_processing import data_reconstraction
 from classification_model import create_transformer_classifier_with_attention
-from visualization import (plot_reconstruction_comparison, plot_training_history,
+from visualization import (plot_reconstruction_comparison, plot_training_history, plot_roc_curve,
                          plot_confusion_matrix, plot_attention_heads, plot_highlighted_ecg_parts)
 from utils import calculate_metrics, print_metrics
 import pandas as pd
@@ -55,8 +55,9 @@ def main():
     # Generate visualizations
     plot_training_history(history, "../output/accuracy_loss.png")
     plot_confusion_matrix(Y_test, predictions, "../output/confusion_matrix.png")
+    plot_roc_curve(Y_test, predictions, "../output/roc_curve.png")
     plot_attention_heads(attention_weights, "../output/heads.png")
-    plot_highlighted_ecg_parts(X_test_original, attention_weights,7030,"../output/highlighted_ecg_parts.png")
+    plot_highlighted_ecg_parts(X_test_original, attention_weights,40,"../output/highlighted_ecg_parts.png")
 
 if __name__ == "__main__":
     main()
