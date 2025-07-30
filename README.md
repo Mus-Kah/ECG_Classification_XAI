@@ -14,4 +14,6 @@ These two datasets are preprocessed. They are retrieved from Kaggle through the 
 To run the project, download the project zip file or clone the repository and install the required dependencies through the following commands:
 * git clone https://github.com/Mus-Kah/ECG_Classification_XAI.git
 * pip install requirements.txt
-* Enter the project and run the following command line: python main.py
+* Enter the project and run the following command line: 
+  * For simple training: python main.py
+  * For training with cross-validation: python main_cv.py
