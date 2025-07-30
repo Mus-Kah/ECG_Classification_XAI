@@ -23,6 +23,15 @@ def split_and_scale_mitbih_data(train_data, test_data):
 
     return X_train, X_test, Y_train, Y_test, scaler
 
+def mitbih_data_scaled(scaler):
+    train_data, test_data = load_mitbih_data(mitbih_train, mitbih_test)
+    data = pd.concat([train_data, test_data], ignore_index=True)
+    data = data.sample(frac=1).reset_index(drop=True)
+    data_scaled = scaler.fit_transform(data)
+    X_all = data_scaled.reshape(data_scaled.shape[0], data_scaled.shape[1], 1)
+    Y_all = data[data.columns[-1]].to_numpy()
+    return X_all, Y_all
+
 abnormal_file = "../data/ptbdb_abnormal.csv"
 normal_file = "../data/ptbdb_normal.csv"
 
@@ -46,3 +55,10 @@ def split_and_scale_ptbdb_data(data, test_size=0.27, random_state=42):
     Y_test = test_data[test_data.columns[-1]]
 
     return X_train, X_test, Y_train, Y_test, scaler
+
+def ptbdb_data_scaled(scaler):
+    data = load_ptbdb_data()
+    data_scaled = scaler.fit_transform(data)
+    X_all = data_scaled.reshape(data_scaled.shape[0], data_scaled.shape[1], 1)
+    Y_all = data[data.columns[-1]].to_numpy()
+    return X_all, Y_all
