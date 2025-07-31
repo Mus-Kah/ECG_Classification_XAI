@@ -27,10 +27,10 @@ def main():
 
     # Get encoded representations
     encoder = get_encoder(autoencoder)
-    """X_all, Y_all = mitbih_data_scaled(scaler)
-    encoded_all = encoder.predict(X_all)"""
-    X_all, Y_all = ptbdb_data_scaled(scaler)
+    X_all, Y_all = mitbih_data_scaled(scaler)
     encoded_all = encoder.predict(X_all)
+    """X_all, Y_all = ptbdb_data_scaled(scaler)
+    encoded_all = encoder.predict(X_all)"""
 
     history = train_cv_classifier(encoded_all, Y_all, X_all, scaler, 50)
     all_accuracies = history[0]
