@@ -20,7 +20,7 @@ def create_transformer_classifier_with_attention(input_shape, num_classes):
     classifier = tf.keras.Model(inputs=classifier_input, outputs=[classifier_output, attention_scores])
     return classifier
 
-def train_classifier(encoded_train, encoded_test, Y_train, Y_test):
+def train_classifier(encoded_train, encoded_test, Y_train, Y_test, epochs=5):
 
     num_classes = len(pd.unique(Y_train))
     classifier = create_transformer_classifier_with_attention(encoded_train.shape[1:], num_classes)
@@ -33,7 +33,7 @@ def train_classifier(encoded_train, encoded_test, Y_train, Y_test):
     history = classifier.fit(
         encoded_train,
         Y_train,
-        epochs=5,
+        epochs=epochs,
         batch_size=32,
         validation_data=(encoded_test, Y_test)
     )

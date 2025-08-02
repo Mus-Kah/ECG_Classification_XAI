@@ -9,18 +9,18 @@ from utils import calculate_metrics, print_metrics
 import pandas as pd
 def main():
     # Load and preprocess MIT-BIH data
-    #train_data, test_data = load_mitbih_data()
-    #X_train, X_test, Y_train, Y_test, scaler = split_and_scale_mitbih_data(train_data, test_data)
+    train_data, test_data = load_mitbih_data()
+    X_train, X_test, Y_train, Y_test, scaler = split_and_scale_mitbih_data(train_data, test_data)
 
     # Load and preprocess PTBDB data
-    data = load_ptbdb_data()
-    X_train, X_test, Y_train, Y_test, scaler = split_and_scale_ptbdb_data(data)
+    #data = load_ptbdb_data()
+    #X_train, X_test, Y_train, Y_test, scaler = split_and_scale_ptbdb_data(data)
 
     # Create and train autoencoder
     input_shape = (X_train.shape[1], 1)
     autoencoder = create_autoencoder_model(input_shape)
     autoencoder.compile(optimizer='adam', loss='mse')
-    autoencoder.fit(X_train, X_train, epochs=5, batch_size=32, validation_data=(X_test, X_test))
+    autoencoder.fit(X_train, X_train, epochs=50, batch_size=32, validation_data=(X_test, X_test))
     #Visualise reconstructed samples
     reconstructed_data, X_test_original, mae_per_sample = data_reconstraction(X_test, autoencoder, scaler)
     plot_reconstruction_comparison(X_test_original, reconstructed_data, mae_per_sample, "../output/reconstructed_data.png")
@@ -32,7 +32,7 @@ def main():
 
     # Create and train classifier
 
-    classifier, history = train_classifier(encoded_train, encoded_test, Y_train, Y_test)
+    classifier, history = train_classifier(encoded_train, encoded_test, Y_train, Y_test, epochs=50)
 
     # Evaluate and visualize results
     predictions, attention_weights = classifier.predict(encoded_test)
