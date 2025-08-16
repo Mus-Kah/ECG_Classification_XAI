@@ -27,3 +27,6 @@ def print_metrics(metrics):
     print(f'F1 Score: {metrics["f1"]:.2f}')
     print('Confusion Matrix:')
     print(metrics["confusion_matrix"])
+
+def execution_time(start_time, end_time):
+    return end_time - start_time

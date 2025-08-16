@@ -2,8 +2,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
-mitbih_train =  "../data/mitbih_train.csv"
-mitbih_test =  "../data/mitbih_test.csv"
+mitbih_train =  "../../data/mitbih_train.csv"
+mitbih_test =  "../../data/mitbih_test.csv"
 
 def load_mitbih_data(mitbih_train=mitbih_train, mitbih_test=mitbih_test):
     train_data = pd.read_csv(mitbih_train, header=None)
@@ -32,8 +32,8 @@ def mitbih_data_scaled(scaler):
     Y_all = data[data.columns[-1]].to_numpy()
     return X_all, Y_all
 
-abnormal_file = "../data/ptbdb_abnormal.csv"
-normal_file = "../data/ptbdb_normal.csv"
+abnormal_file = "../../data/ptbdb_abnormal.csv"
+normal_file = "../../data/ptbdb_normal.csv"
 
 def load_ptbdb_data(abnormal_file=abnormal_file, normal_file=normal_file):
     df1 = pd.read_csv(abnormal_file, header=None)

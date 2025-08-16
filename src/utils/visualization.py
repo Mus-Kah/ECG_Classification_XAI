@@ -360,3 +360,154 @@ def plot_cross_confusion_matrices(all_conf_matrices, Y_all, save_path=None):
 
     if save_path:
         plt.savefig(save_path)
+
+    def plot_cross_performance(all_accuracies, all_f1s, save_path=None):
+        import numpy as np
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+
+        sns.set(style="whitegrid")
+        folds = np.arange(1, len(all_accuracies) + 1)
+
+        palette_acc = sns.color_palette("Blues", len(all_accuracies))
+        palette_f1 = sns.color_palette("Reds", len(all_f1s))
+
+        fig, axs = plt.subplots(2, 1, figsize=(10, 10))
+
+        axs[0].bar(folds, all_accuracies, color=palette_acc)
+        axs[0].axhline(np.mean(all_accuracies), linestyle='--', color='black',
+                       label=f"Mean: {np.mean(all_accuracies):.3f}")
+        axs[0].set_title("Accuracy per Fold")
+        axs[0].set_xlabel("Fold")
+        axs[0].set_ylabel("Accuracy")
+        axs[0].set_xticks(folds)
+        axs[0].legend()
+
+        axs[1].bar(folds, all_f1s, color=palette_f1)
+        axs[1].axhline(np.mean(all_f1s), linestyle='--', color='black', label=f"Mean: {np.mean(all_f1s):.3f}")
+        axs[1].set_title("F1 Score per Fold")
+        axs[1].set_xlabel("Fold")
+        axs[1].set_ylabel("F1 Score")
+        axs[1].set_xticks(folds)
+        axs[1].legend()
+
+        plt.tight_layout()
+        if save_path:
+            plt.savefig(save_path)
+        # plt.show()
+
+
+def plot_ablation_cv_performance(all_accuracies, all_f1s, save_path=None):
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    sns.set(style="whitegrid")
+    folds = np.arange(1, len(all_accuracies)+1)
+
+    palette_acc = sns.color_palette("Blues", len(all_accuracies))
+    palette_f1 = sns.color_palette("Reds", len(all_f1s))
+
+    fig, axs = plt.subplots(2, 1, figsize=(10, 10))
+
+    axs[0].bar(folds, all_accuracies, color=palette_acc)
+    axs[0].axhline(np.mean(all_accuracies), linestyle='--', color='black', label=f"Mean: {np.mean(all_accuracies):.3f}")
+    axs[0].set_title("Accuracy per Fold")
+    axs[0].set_xlabel("Fold")
+    axs[0].set_ylabel("Accuracy")
+    axs[0].set_xticks(folds)
+    axs[0].legend()
+
+    axs[1].bar(folds, all_f1s, color=palette_f1)
+    axs[1].axhline(np.mean(all_f1s), linestyle='--', color='black', label=f"Mean: {np.mean(all_f1s):.3f}")
+    axs[1].set_title("F1 Score per Fold")
+    axs[1].set_xlabel("Fold")
+    axs[1].set_ylabel("F1 Score")
+    axs[1].set_xticks(folds)
+    axs[1].legend()
+
+    plt.tight_layout()
+    if save_path:
+        plt.savefig(save_path)
+    # plt.show()
+
+
+def plot_ablation_cv_training_history(fold_histories, save_path=None):
+    import matplotlib.pyplot as plt
+
+    fig, axs = plt.subplots(2, 5, figsize=(20, 8))
+    axs = axs.flatten()
+
+    for i, history in enumerate(fold_histories):
+        ax = axs[i]
+
+        # Keras standard keys
+        acc_key = 'accuracy'
+        val_acc_key = 'val_accuracy'
+        loss_key = 'loss'
+        val_loss_key = 'val_loss'
+
+        # Check if keys exist, else warn
+        missing_keys = [k for k in [acc_key, val_acc_key, loss_key, val_loss_key] if k not in history.history]
+        if missing_keys:
+            print(f"Missing keys for fold {i+1}: {missing_keys}. Available keys: {list(history.history.keys())}")
+            continue
+
+        epochs = range(1, len(history.history[acc_key]) + 1)
+
+        ax.plot(epochs, history.history[acc_key], label='Train Acc', color='blue', marker='o')
+        ax.plot(epochs, history.history[val_acc_key], label='Val Acc', color='green', marker='s')
+
+        ax.plot(epochs, history.history[loss_key], label='Train Loss', color='red', linestyle='--', marker='x')
+        ax.plot(epochs, history.history[val_loss_key], label='Val Loss', color='orange', linestyle='--', marker='^')
+
+        ax.set_title(f'Fold {i + 1}')
+        ax.set_xlabel('Epoch')
+        ax.set_ylabel('Value')
+        ax.legend()
+        ax.grid(True)
+
+    plt.tight_layout()
+    if save_path:
+        plt.savefig(save_path)
+    # plt.show()
+
+
+def plot_ablation_cv_confusion_matrices(all_conf_matrices, Y_all, save_path=None):
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    n_folds = len(all_conf_matrices)
+    n_rows = 2
+    n_cols = int(np.ceil(n_folds / n_rows))
+
+    fig, axs = plt.subplots(n_rows, n_cols, figsize=(4*n_cols, 8))
+    axs = axs.flatten()
+
+    classes = np.unique(Y_all)
+
+    for i, cm in enumerate(all_conf_matrices):
+        ax = axs[i]
+        im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+        ax.set_title(f'Fold {i + 1}')
+        ax.set_xlabel('Predicted')
+        ax.set_ylabel('True')
+
+        ax.set_xticks(np.arange(len(classes)))
+        ax.set_yticks(np.arange(len(classes)))
+        ax.set_xticklabels(classes)
+        ax.set_yticklabels(classes)
+        ax.tick_params(axis='both', which='both', length=0)
+
+        for (j, k), val in np.ndenumerate(cm):
+            ax.text(k, j, f'{val}', ha='center', va='center',
+                    color='white' if val > cm.max() / 2 else 'black', fontsize=10)
+
+    # Remove empty subplots if any
+    for j in range(i+1, len(axs)):
+        fig.delaxes(axs[j])
+
+    plt.tight_layout()
+    if save_path:
+        plt.savefig(save_path)
+    # plt.show()
