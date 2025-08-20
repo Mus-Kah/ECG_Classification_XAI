@@ -361,7 +361,7 @@ def plot_cross_confusion_matrices(all_conf_matrices, Y_all, save_path=None):
     if save_path:
         plt.savefig(save_path)
 
-    def plot_cross_performance(all_accuracies, all_f1s, save_path=None):
+    """def plot_cross_performance(all_accuracies, all_f1s, save_path=None):
         import numpy as np
         import matplotlib.pyplot as plt
         import seaborn as sns
@@ -395,7 +395,7 @@ def plot_cross_confusion_matrices(all_conf_matrices, Y_all, save_path=None):
         if save_path:
             plt.savefig(save_path)
         # plt.show()
-
+"""
 
 def plot_ablation_cv_performance(all_accuracies, all_f1s, save_path=None):
     import numpy as np
