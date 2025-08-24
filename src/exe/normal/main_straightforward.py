@@ -28,7 +28,7 @@ def main():
     autoencoder.fit(X_train, X_train, epochs=50, batch_size=32, validation_data=(X_test, X_test))
     #Visualise reconstructed samples
     reconstructed_data, X_test_original, mae_per_sample = data_reconstraction(X_test, autoencoder, scaler)
-    plot_reconstruction_comparison(X_test_original, reconstructed_data, mae_per_sample, "../../output/reconstructed_data.png")
+    plot_reconstruction_comparison(X_test_original, reconstructed_data, mae_per_sample, "../../../output/reconstructed_data.png")
 
     # Get encoded representations
     encoder = get_encoder(autoencoder)
@@ -45,11 +45,11 @@ def main():
     #print_metrics(metrics)
 
     # Generate visualizations
-    plot_training_history(history, "../../output/accuracy_loss.png")
-    plot_confusion_matrix(Y_test, predictions, "../../output/confusion_matrix.png")
-    plot_roc_curve(Y_test, predictions, "../../output/roc_curve.png")
-    plot_attention_heads(attention_weights, "../../output/heads.png")
-    plot_highlighted_ecg_parts(X_test_original, attention_weights,40,"../../output/highlighted_ecg_parts.png")
+    plot_training_history(history, "../../../output/accuracy_loss.png")
+    plot_confusion_matrix(Y_test, predictions, "../../../output/confusion_matrix.png")
+    plot_roc_curve(Y_test, predictions, "../../../output/roc_curve.png")
+    plot_attention_heads(attention_weights, "../../../output/heads.png")
+    plot_highlighted_ecg_parts(X_test_original, attention_weights,40,"../../../output/highlighted_ecg_parts.png")
 
     end_time = datetime.now()
 
